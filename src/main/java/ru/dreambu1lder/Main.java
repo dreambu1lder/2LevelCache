@@ -100,35 +100,8 @@ public class Main {
 
     // N + 1
     public static void checkNPlusOneProblem() {
-        System.out.println("-".repeat(50));
-        System.out.println("N + 1");
-        System.out.println("-".repeat(50));
-
-        try (Session session = HibernateSessionFactoryUtil.getSessionFactory()
-                                                          .openSession()
-        ) {
-            Transaction transaction = session.beginTransaction();
-
-            try {
-                Product product1 = new Product("Product 1", 1.0);
-                Product product2 = new Product("Product 2", 2.0);
-
-                session.save(product1);
-                session.save(product2);
-
-                List<Product> products = new ArrayList<>(List.of(product1, product2));
-
-                Order order1 = new Order(products);
-                session.save(order1);
-                OrderServiceImpl orderService = new OrderServiceImpl();
-                List<Order> ordersWithProducts = orderService.getAllOrdersWithProducts();
-            } catch (Exception e) {
-                if (transaction != null) {
-                    transaction.rollback();
-                    logger.error("Ошибка при получении сущностей в N+1 функции\n" + e);
-                }
-            }
-        }
+        OrderServiceImpl orderService = new OrderServiceImpl();
+        List<Order> ordersWithProducts = orderService.getAllOrdersWithProducts();
     }
 
     public static void logCacheStatistics(Statistics stats) {
