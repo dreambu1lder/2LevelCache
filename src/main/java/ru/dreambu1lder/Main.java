@@ -6,8 +6,10 @@ import org.hibernate.stat.Statistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.dreambu1lder.entities.Order;
+import ru.dreambu1lder.entities.Product;
 import ru.dreambu1lder.services.OrderServiceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -16,8 +18,6 @@ public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
-        //N + 1
-//        checkNPlusOneProblem();
 
         LoggerConfig.configureLogger();
 
@@ -92,21 +92,43 @@ public class Main {
         if (stats != null) {
             logCacheStatistics(stats);
         }
-
         // Завершение работы программы
         HibernateSessionFactoryUtil.shutdown();
+
+        checkNPlusOneProblem();
     }
 
     // N + 1
     public static void checkNPlusOneProblem() {
-        OrderServiceImpl orderService = new OrderServiceImpl();
-        List<Order> ordersWithProducts = orderService.getAllOrdersWithProducts();
-
         System.out.println("-".repeat(50));
         System.out.println("N + 1");
         System.out.println("-".repeat(50));
 
-        System.out.println(ordersWithProducts);
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory()
+                                                          .openSession()
+        ) {
+            Transaction transaction = session.beginTransaction();
+
+            try {
+                Product product1 = new Product("Product 1", 1.0);
+                Product product2 = new Product("Product 2", 2.0);
+
+                session.save(product1);
+                session.save(product2);
+
+                List<Product> products = new ArrayList<>(List.of(product1, product2));
+
+                Order order1 = new Order(products);
+                session.save(order1);
+                OrderServiceImpl orderService = new OrderServiceImpl();
+                List<Order> ordersWithProducts = orderService.getAllOrdersWithProducts();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                    logger.error("Ошибка при получении сущностей в N+1 функции\n" + e);
+                }
+            }
+        }
     }
 
     public static void logCacheStatistics(Statistics stats) {

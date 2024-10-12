@@ -10,27 +10,24 @@ import java.util.List;
 
 public class OrderRepository {
     public List<Order> findAll() {
-        Session session = HibernateSessionFactoryUtil.getSessionFactory()
-                                                     .openSession();
-        Transaction transaction = null;
         List<Order> ordersWithProducts = null;
 
-        try {
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory()
+                                                          .openSession();
+        ) {
+            Transaction transaction = null;
             transaction = session.beginTransaction();
 
-            Query<Order> query = session.createQuery("FROM Order", Order.class);
-            ordersWithProducts = query.getResultList();
+            try {
+                Query<Order> query = session.createQuery("FROM Order", Order.class);
+                ordersWithProducts = query.getResultList();
 
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-
-            e.printStackTrace();
-        } finally {
-            if (session != null && session.isOpen()) {
-                session.close();
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                e.printStackTrace();
             }
         }
 

@@ -44,10 +44,14 @@ public class HibernateUtil {
         // Настройки подключения к базе данных
         hibernateProperties.put(AvailableSettings.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
         hibernateProperties.put(AvailableSettings.DRIVER, "org.postgresql.Driver");
-        hibernateProperties.put(AvailableSettings.URL, "jdbc:postgresql://localhost:5432/test");
+        hibernateProperties.put(AvailableSettings.URL, "jdbc:postgresql://localhost:5440/test");
         hibernateProperties.put(AvailableSettings.USER, "test");
         hibernateProperties.put(AvailableSettings.PASS, "test");
         hibernateProperties.put(AvailableSettings.HBM2DDL_AUTO, "update");
+        hibernateProperties.put(AvailableSettings.SHOW_SQL, "true");
+        hibernateProperties.put(AvailableSettings.FORMAT_SQL, "true");
+        hibernateProperties.put(AvailableSettings.HIGHLIGHT_SQL, "true");
+        hibernateProperties.put(AvailableSettings.USE_SQL_COMMENTS, "true");
 
         // Включение кэша второго уровня
         hibernateProperties.put(AvailableSettings.USE_SECOND_LEVEL_CACHE, true);

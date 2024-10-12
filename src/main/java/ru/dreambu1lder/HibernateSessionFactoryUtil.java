@@ -6,6 +6,8 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.stat.Statistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.dreambu1lder.entities.Order;
+import ru.dreambu1lder.entities.Product;
 
 public class HibernateSessionFactoryUtil {
 
@@ -13,17 +15,20 @@ public class HibernateSessionFactoryUtil {
     private static SessionFactory sessionFactory;
 
     public static SessionFactory getSessionFactory() {
-        if (sessionFactory == null) {
+        if (sessionFactory == null || sessionFactory.isClosed()) {
             try {
                 Configuration configuration = new Configuration();
                 configuration.addProperties(HibernateUtil.getHibernateProperties());
                 configuration.addAnnotatedClass(MyEntity.class);  // Добавление класса сущности
+                configuration.addAnnotatedClass(Order.class);
+                configuration.addAnnotatedClass(Product.class);
 
                 // Создаем фабрику с учетом кэша второго уровня
                 sessionFactory = configuration.buildSessionFactory();
 
                 // Включение статистики для логирования
-                sessionFactory.getStatistics().setStatisticsEnabled(true);
+                sessionFactory.getStatistics()
+                              .setStatisticsEnabled(true);
                 logger.info("SessionFactory инициализирована");
             } catch (HibernateException e) {
                 logger.error("Ошибка при инициализации SessionFactory", e);
