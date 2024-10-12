@@ -106,4 +106,22 @@ public class Main {
             }
         }
     }
+
+    // Метод для удаления всех сущностей
+    public static void deleteAllEntities() {
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                // Выполняем HQL-запрос для удаления всех сущностей MyEntity
+                session.createQuery("DELETE FROM MyEntity").executeUpdate();
+                transaction.commit();
+                logger.info("Все сущности MyEntity были успешно удалены из базы данных.");
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                logger.error("Ошибка при удалении сущностей MyEntity", e);
+            }
+        }
+    }
 }
