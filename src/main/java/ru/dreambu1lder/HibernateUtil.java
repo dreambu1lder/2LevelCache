@@ -3,6 +3,7 @@ package ru.dreambu1lder;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.config.CacheConfiguration;
+import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AvailableSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +21,12 @@ public class HibernateUtil {
             cacheManager = CacheManager.create();  // Создаем новый CacheManager без конфигурационного файла
 
             // Настройка кэша для сущности MyEntity
-            CacheConfiguration myEntityCacheConfig = new CacheConfiguration()
-                    .name("ru.dreambu1lder.MyEntity")
-                    .maxEntriesLocalHeap(1000)
-                    .memoryStoreEvictionPolicy("LRU")
-                    .timeToIdleSeconds(300)
-                    .timeToLiveSeconds(600)
-                    .statistics(true);
+            CacheConfiguration myEntityCacheConfig = new CacheConfiguration().name("ru.dreambu1lder.MyEntity")
+                                                                             .maxEntriesLocalHeap(1000)
+                                                                             .memoryStoreEvictionPolicy("LRU")
+                                                                             .timeToIdleSeconds(300)
+                                                                             .timeToLiveSeconds(600)
+                                                                             .statistics(true);
 
             // Создание кэша и добавление его в CacheManager
             Cache myEntityCache = new Cache(myEntityCacheConfig);
