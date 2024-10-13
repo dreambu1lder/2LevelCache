@@ -3,11 +3,13 @@ services:
     image: postgres:15
     container_name: postgres-db
     environment:
-      POSTGRES_USER: test
-      POSTGRES_PASSWORD: test
-      POSTGRES_DB: test
+      - POSTGRES_DB=test
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - LANG=en_US.UTF-8
+      - LC_ALL=en_US.UTF-8
     ports:
-      - "5432:5432"
+      - "5440:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

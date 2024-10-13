@@ -5,12 +5,20 @@ import org.hibernate.Transaction;
 import org.hibernate.stat.Statistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.dreambu1lder.entities.Order;
+import ru.dreambu1lder.entities.Product;
+import ru.dreambu1lder.services.OrderServiceImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
+    private final OrderServiceImpl orderService = new OrderServiceImpl();
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
+
         LoggerConfig.configureLogger();
 
         // Удаление всех сущностей из базы данных перед началом работы
@@ -20,7 +28,9 @@ public class Main {
         resetAutoIncrement();
 
         // Сохранение нескольких сущностей
-        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory()
+                                                          .openSession()
+        ) {
             Transaction transaction = session.beginTransaction();
             try {
                 for (int i = 1; i <= 5; i++) {
@@ -37,7 +47,9 @@ public class Main {
             }
         }
         // Загрузка сущностей из базы для добавления их в кэш
-        try (Session session2 = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+        try (Session session2 = HibernateSessionFactoryUtil.getSessionFactory()
+                                                           .openSession()
+        ) {
             Transaction transaction2 = session2.beginTransaction();
             try {
                 for (int i = 1; i <= 5; i++) {
@@ -55,7 +67,9 @@ public class Main {
             }
         }
         // Загрузка сущностей из кэша второго уровня
-        try (Session session3 = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+        try (Session session3 = HibernateSessionFactoryUtil.getSessionFactory()
+                                                           .openSession()
+        ) {
             Transaction transaction3 = session3.beginTransaction();
             try {
                 for (int i = 1; i <= 5; i++) {
@@ -78,9 +92,15 @@ public class Main {
         if (stats != null) {
             logCacheStatistics(stats);
         }
-
+        checkNPlusOneProblem();
         // Завершение работы программы
         HibernateSessionFactoryUtil.shutdown();
+    }
+
+    // N + 1
+    public static void checkNPlusOneProblem() {
+        OrderServiceImpl orderService = new OrderServiceImpl();
+        List<Order> ordersWithProducts = orderService.getAllOrdersWithProducts();
     }
 
     public static void logCacheStatistics(Statistics stats) {
@@ -91,11 +111,14 @@ public class Main {
     }
 
     public static void resetAutoIncrement() {
-        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory()
+                                                          .openSession()
+        ) {
             Transaction transaction = session.beginTransaction();
             try {
                 // Выполняем SQL-запрос для сброса последовательности
-                session.createNativeQuery("ALTER SEQUENCE myentity_id_seq RESTART WITH 1").executeUpdate();
+                session.createNativeQuery("ALTER SEQUENCE myentity_id_seq RESTART WITH 1")
+                       .executeUpdate();
                 transaction.commit();
                 logger.info("Автоинкремент для таблицы 'MyEntity' успешно сброшен.");
             } catch (Exception e) {
@@ -109,11 +132,14 @@ public class Main {
 
     // Метод для удаления всех сущностей
     public static void deleteAllEntities() {
-        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory()
+                                                          .openSession()
+        ) {
             Transaction transaction = session.beginTransaction();
             try {
                 // Выполняем HQL-запрос для удаления всех сущностей MyEntity
-                session.createQuery("DELETE FROM MyEntity").executeUpdate();
+                session.createQuery("DELETE FROM MyEntity")
+                       .executeUpdate();
                 transaction.commit();
                 logger.info("Все сущности MyEntity были успешно удалены из базы данных.");
             } catch (Exception e) {
