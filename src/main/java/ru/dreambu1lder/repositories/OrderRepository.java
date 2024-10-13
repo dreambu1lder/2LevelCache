@@ -14,7 +14,7 @@ import java.util.List;
 public class OrderRepository {
     public List<Order> findAll() {
         System.out.println("-".repeat(50));
-        System.out.println("OrderRepository N+1");
+        System.out.println("N+1");
         List<Order> ordersWithProducts = null;
 
         try (Session session = HibernateSessionFactoryUtil.getSessionFactory()
@@ -30,7 +30,16 @@ public class OrderRepository {
                 Product product2 = new Product("Product 2", 2.0);
                 session.save(product2);
 
-                List<Product> products = new ArrayList<>(List.of(product1, product2));
+                Product product3 = new Product("Product 3", 3.0);
+                session.save(product3);
+
+                Product product4 = new Product("Product 4", 4.0);
+                session.save(product4);
+
+                Product product5 = new Product("Product 5", 5.0);
+                session.save(product5);
+
+                List<Product> products = new ArrayList<>(List.of(product1, product2, product3, product4, product5));
                 Order order1 = new Order(products);
                 session.save(order1);
 
@@ -46,7 +55,7 @@ public class OrderRepository {
             }
         }
 
-        System.out.println("OrderRepository N+1 End");
+        System.out.println("N+1 End");
         System.out.println("-".repeat(50));
         return ordersWithProducts;
     }
