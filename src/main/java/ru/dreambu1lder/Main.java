@@ -100,7 +100,7 @@ public class Main {
     // N + 1
     public static void checkNPlusOneProblem() {
         OrderServiceImpl orderService = new OrderServiceImpl();
-        List<Order> ordersWithProducts = orderService.getAllOrdersWithProducts();
+        orderService.getAllOrdersWithProducts();
     }
 
     public static void logCacheStatistics(Statistics stats) {
