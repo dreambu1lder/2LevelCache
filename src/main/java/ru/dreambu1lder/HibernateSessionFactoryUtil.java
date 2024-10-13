@@ -15,7 +15,7 @@ public class HibernateSessionFactoryUtil {
     private static SessionFactory sessionFactory;
 
     public static SessionFactory getSessionFactory() {
-        if (sessionFactory == null || sessionFactory.isClosed()) {
+        if (sessionFactory == null) {
             try {
                 Configuration configuration = new Configuration();
                 configuration.addProperties(HibernateUtil.getHibernateProperties());

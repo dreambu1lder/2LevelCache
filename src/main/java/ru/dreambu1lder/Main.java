@@ -92,10 +92,9 @@ public class Main {
         if (stats != null) {
             logCacheStatistics(stats);
         }
+        checkNPlusOneProblem();
         // Завершение работы программы
         HibernateSessionFactoryUtil.shutdown();
-
-        checkNPlusOneProblem();
     }
 
     // N + 1
