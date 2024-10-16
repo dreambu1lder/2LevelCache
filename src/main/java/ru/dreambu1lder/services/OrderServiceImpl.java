@@ -19,7 +19,7 @@ public class OrderServiceImpl {
         return orders;
     }
 
-    public List<Order> getAllOrdersWithProductsUsingSubSelect(){
-        return orderRepository.findAllOrdersWithProductsUsingSubselect();
+    public List<Order> getAllOrdersWithProductsUsingSUBSELECT(){
+        return orderRepository.findAllOrdersWithProductsUsingSUBSELECT();
     }
 }

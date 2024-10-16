@@ -95,9 +95,9 @@ public class Main {
         HibernateSessionFactoryUtil.shutdown();
     }
 
-    // Решение проблемы N + 1 с использованием Fetchmode (join)
+    // Решение проблемы N + 1 с использованием Fetchmode (SUBSELECT)
     public static void checkNPlusOneProblemFetchModeJoin() {
-        orderService.getAllOrdersWithProductsUsingSubSelect().forEach(System.out::println);
+        orderService.getAllOrdersWithProductsUsingSUBSELECT().forEach(System.out::println);
     }
 
     // N + 1

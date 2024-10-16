@@ -61,7 +61,7 @@ public class OrderRepository {
         return ordersWithProducts;
     }
 
-        public List<Order> findAllOrdersWithProductsUsingSubselect() {
+        public List<Order> findAllOrdersWithProductsUsingSUBSELECT() {
             List<Order> ordersWithProducts;
 
             try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
