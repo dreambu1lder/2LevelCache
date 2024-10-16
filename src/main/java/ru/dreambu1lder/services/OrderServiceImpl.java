@@ -18,4 +18,8 @@ public class OrderServiceImpl {
 
         return orders;
     }
+
+    public List<Order> getAllOrdersWithProductsUsingSubSelect(){
+        return orderRepository.findAllOrdersWithProductsUsingSubselect();
+    }
 }
