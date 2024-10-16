@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    private final OrderServiceImpl orderService = new OrderServiceImpl();
+    private static final OrderServiceImpl orderService = new OrderServiceImpl();
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
@@ -96,6 +96,10 @@ public class Main {
 
         NPlusOneProblemBatchSize();
 
+        //checkNPlusOneProblemFetchModeSUBSELECT(); // для использования измени мод у связи в классе Order на SUBSELECT
+
+        checkNPlusOneProblemFetchModeJOIN(); // для использования измени мод у связи в классе Order на JOIN
+
         // Завершение работы программы
         HibernateSessionFactoryUtil.shutdown();
     }
@@ -110,6 +114,16 @@ public class Main {
     public static void NPlusOneProblemBatchSize() {
         OrderServiceImpl orderService = new OrderServiceImpl();
         orderService.demonstrateBatchSize();
+    }
+
+    // Решение проблемы N + 1 с использованием Fetchmode (SUBSELECT)
+    public static void checkNPlusOneProblemFetchModeSUBSELECT() {
+        orderService.getAllOrdersWithProductsUsingSUBSELECT().forEach(System.out::println);
+    }
+
+    // Решение проблемы N + 1 с использованием Fetchmode (JOIN)
+    public static void checkNPlusOneProblemFetchModeJOIN() {
+        orderService.getAllOrdersWithProductsUsingJOIN().forEach(System.out::println);
     }
 
     public static void logCacheStatistics(Statistics stats) {

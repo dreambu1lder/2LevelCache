@@ -1,6 +1,8 @@
 package ru.dreambu1lder.entities;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,9 +17,11 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "orders_products", joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
     @BatchSize(size = 10)
+    @Fetch(FetchMode.SELECT)
+    //@Fetch(FetchMode.JOIN)
     private List<Product> orderProducts = new ArrayList<>();
 
     public Order() {

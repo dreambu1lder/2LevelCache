@@ -1,12 +1,13 @@
 package ru.dreambu1lder.repositories;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.query.Query;
 import ru.dreambu1lder.HibernateSessionFactoryUtil;
 import ru.dreambu1lder.entities.Order;
 import ru.dreambu1lder.entities.Product;
-import ru.dreambu1lder.services.OrderServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,4 +96,57 @@ public class OrderRepository {
         System.out.println("-".repeat(50));
         return ordersWithProducts;
     }
+
+    public List<Order> findAllOrdersWithProductsUsingSUBSELECT() {
+        List<Order> ordersWithProducts;
+
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            try {
+
+                Criteria criteria = session.createCriteria(Order.class);
+                // Устанавливаем режим FetchMode.SUBSELECT для коллекции products
+                criteria.setFetchMode("products", FetchMode.SUBSELECT.getHibernateFetchMode());
+                ordersWithProducts = criteria.list();
+
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                throw e;
+            }
+        }
+
+        System.out.println("End of FetchMode.SUBSELECT demonstration");
+        System.out.println("-".repeat(50));
+        return ordersWithProducts;
+    }
+
+    public List<Order> findAllOrdersWithProductsUsingJOIN() {
+        List<Order> ordersWithProducts;
+
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            try {
+                // Устанавливаем режим FetchMode.JOIN для коллекции orderProducts
+                Query<Order> query = session.createQuery("SELECT DISTINCT o FROM Order o JOIN FETCH o.orderProducts", Order.class);
+                ordersWithProducts = query.getResultList();
+
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                throw e;
+            }
+        }
+
+        System.out.println("End of FetchMode.JOIN demonstration");
+        System.out.println("-".repeat(50));
+        return ordersWithProducts;
+    }
+
 }
