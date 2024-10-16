@@ -23,4 +23,13 @@ public class OrderServiceImpl {
         List<Order> orders = orderRepository.findAllOrdersWithProducts();
 
     }
+
+    public List<Order> getAllOrdersWithProductsUsingSUBSELECT(){
+        return orderRepository.findAllOrdersWithProductsUsingSUBSELECT();
+    }
+
+    public List<Order> getAllOrdersWithProductsUsingJOIN(){
+        return orderRepository.findAllOrdersWithProductsUsingJOIN();
+    }
+
 }
