@@ -19,7 +19,13 @@ public class OrderServiceImpl {
         return orders;
     }
 
+
     public List<Order> getAllOrdersWithProductsUsingSUBSELECT(){
         return orderRepository.findAllOrdersWithProductsUsingSUBSELECT();
+
+    public void demonstrateBatchSize() {
+        List<Order> orders = orderRepository.findAllOrdersWithProducts();
+
+
     }
 }

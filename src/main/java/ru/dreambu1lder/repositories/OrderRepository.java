@@ -61,6 +61,7 @@ public class OrderRepository {
         return ordersWithProducts;
     }
 
+
         public List<Order> findAllOrdersWithProductsUsingSUBSELECT() {
             List<Order> ordersWithProducts;
 
@@ -85,4 +86,41 @@ public class OrderRepository {
 
             return ordersWithProducts;
         }
+
+    public List<Order> findAllOrdersWithProducts() {
+        System.out.println("-".repeat(50));
+        System.out.println("Demonstrating @BatchSize");
+
+        List<Order> ordersWithProducts = null;
+
+        try (Session session = HibernateSessionFactoryUtil.getSessionFactory().openSession()) {
+            Transaction transaction = null;
+            transaction = session.beginTransaction();
+
+            try {
+                // Запрос для загрузки всех заказов
+                Query<Order> query = session.createQuery("FROM Order", Order.class);
+                ordersWithProducts = query.getResultList(); // Загружаем все заказы
+
+                // При доступе к связанным продуктам будет задействован @BatchSize
+                for (Order order : ordersWithProducts) {
+                    System.out.println("Order ID: " + order.getId());
+                    List<Product> products = order.getOrderProducts(); // Продукты будут загружены пакетами
+                    System.out.println("Products for Order: " + products);
+                }
+
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) {
+                    transaction.rollback();
+                }
+                e.printStackTrace();
+            }
+        }
+
+        System.out.println("End of @BatchSize demonstration");
+        System.out.println("-".repeat(50));
+        return ordersWithProducts;
+    }
+
 }

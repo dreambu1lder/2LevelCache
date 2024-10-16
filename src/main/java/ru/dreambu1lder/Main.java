@@ -90,7 +90,12 @@ public class Main {
         }
         checkNPlusOneProblem();
 
+
         checkNPlusOneProblemFetchModeJoin();
+      
+        NPlusOneProblemBatchSize();
+
+
         // Завершение работы программы
         HibernateSessionFactoryUtil.shutdown();
     }
@@ -104,6 +109,12 @@ public class Main {
     public static void checkNPlusOneProblem() {
         OrderServiceImpl orderService = new OrderServiceImpl();
         orderService.getAllOrdersWithProducts();
+    }
+
+    // BatchSize
+    public static void NPlusOneProblemBatchSize() {
+        OrderServiceImpl orderService = new OrderServiceImpl();
+        orderService.demonstrateBatchSize();
     }
 
     public static void logCacheStatistics(Statistics stats) {

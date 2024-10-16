@@ -1,5 +1,7 @@
 package ru.dreambu1lder.entities;
 
+import org.hibernate.annotations.BatchSize;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ public class Product {
     private double price;
 
     @ManyToMany(mappedBy = "orderProducts")
+    @BatchSize(size = 10)
     private List<Order> orders = new ArrayList<>();
 
     public Product() {
