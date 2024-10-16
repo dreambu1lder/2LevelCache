@@ -18,4 +18,9 @@ public class OrderServiceImpl {
 
         return orders;
     }
+
+    public void demonstrateBatchSize() {
+        List<Order> orders = orderRepository.findAllOrdersWithProducts();
+
+    }
 }

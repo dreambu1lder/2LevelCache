@@ -1,5 +1,7 @@
 package ru.dreambu1lder.entities;
 
+import org.hibernate.annotations.BatchSize;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,7 @@ public class Order {
 
     @ManyToMany
     @JoinTable(name = "orders_products", joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "product_id"))
+    @BatchSize(size = 10)
     private List<Product> orderProducts = new ArrayList<>();
 
     public Order() {
